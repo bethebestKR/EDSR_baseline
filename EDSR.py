@@ -30,8 +30,11 @@ class EDSR(nn.Module):
 
         # Upscaling
         self.upscale = nn.Sequential(
-            nn.Conv2d(n_feats, n_feats * (scale ** 2), kernel_size=3, padding=1),
-            nn.PixelShuffle(scale),
+            nn.Conv2d(n_feats, n_feats * 4, kernel_size=3, padding=1),
+            nn.PixelShuffle(2),  # 첫 번째 x2 업스케일
+            nn.ReLU(inplace=True),  # ReLU 추가
+            nn.Conv2d(n_feats, n_feats * 4, kernel_size=3, padding=1),
+            nn.PixelShuffle(2),  # 두 번째 x2 업스케일
             nn.Conv2d(n_feats, 3, kernel_size=3, padding=1)
         )
 
